@@ -115,6 +115,8 @@ let Logout = async (req, res) => {
 };
 
 module.exports = {
+  isExist,
+  addUser,
   Login,
   updateUser,
   Logout,
