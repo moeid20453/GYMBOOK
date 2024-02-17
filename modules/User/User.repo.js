@@ -1,9 +1,15 @@
-let User = require("./User.Model");
-let bcrypt = require("bcrypt");
+import User, {
+  findOne,
+  find,
+  findByIdAndUpdate,
+  findByIdAndDelete,
+  findOneAndUpdate,
+} from "./User.Model";
+import { compare, hash } from "bcrypt";
 
 exports.isExist = async (filter) => {
   try {
-    const user = await User.findOne(filter);
+    const user = await findOne(filter);
     if (user) {
       return {
         success: true,
@@ -28,7 +34,7 @@ exports.isExist = async (filter) => {
 };
 exports.get = async (filter) => {
   try {
-    let data = await User.findOne(filter).select("-password");
+    let data = await findOne(filter).select("-password");
     if (data) {
       return {
         success: true,
@@ -53,7 +59,7 @@ exports.get = async (filter) => {
 
 exports.list = async (filter) => {
   try {
-    let users = await User.find(filter).select("-password");
+    let users = await find(filter).select("-password");
     return {
       success: true,
       data: users,
@@ -110,7 +116,7 @@ exports.update = async (_id, form) => {
             code: 409,
           };
         }
-        await User.findByIdAndUpdate({ _id }, form);
+        await findByIdAndUpdate({ _id }, form);
         let userUpdate = await this.isExist({ _id });
         return {
           success: true,
@@ -140,7 +146,7 @@ exports.remove = async (id) => {
     const user = await this.isExist({ id });
     if (user.success) {
       if (user.data.role == "user") {
-        await User.findByIdAndDelete({ id });
+        await findByIdAndDelete({ id });
         await Cart.delete(id);
         for (let i = 0; i < user.data.userReviews.length; i++) {
           Review.delete(user.data.userReviews[i]);
@@ -152,7 +158,7 @@ exports.remove = async (id) => {
           code: 200,
         };
       } else {
-        await User.findByIdAndDelete({ id });
+        await findByIdAndDelete({ id });
         return {
           success: true,
           data: user,
@@ -180,7 +186,7 @@ exports.comparePassword = async (email, password) => {
     email = email.toLowerCase();
     let user = await this.isExist({ email });
     if (user.success) {
-      let match = await bcrypt.compare(password, user.record.password);
+      let match = await compare(password, user.record.password);
       if (match) {
         return {
           success: true,
@@ -217,8 +223,8 @@ exports.resetPassword = async (email, newPassword) => {
     let user = await this.isExist({ email });
     let saltrounds = 5;
     if (user.success) {
-      let hashedpassword = await bcrypt.hash(newPassword, saltrounds);
-      await User.findOneAndUpdate({ email }, { password: hashedpassword });
+      let hashedpassword = await hash(newPassword, saltrounds);
+      await findOneAndUpdate({ email }, { password: hashedpassword });
       return {
         success: true,
         code: 200,

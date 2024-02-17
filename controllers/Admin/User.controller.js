@@ -1,4 +1,4 @@
-const User = require('../../modules/user/User.repo')
+const User = require('../../modules/User/User.repo')
 const Wish = require("../../modules/wishlist/Wishlist.repo")
 
   const createUser = async(req,res)=>{

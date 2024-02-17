@@ -25,7 +25,7 @@ exports.isExist = async (filter) => {
     };
   }
 };
-exports.GetPosts = async (filter) => {
+exports.GetPost = async (filter) => {
   try {
     let post = await Post.findOne(filter);
     if (post) {
@@ -101,7 +101,7 @@ exports.DeletePost = async (id) => {
       await Post.findByIdAndDelete({ id });
       return {
         success: true,
-        post: post,
+        data: post,
         code: 200,
       };
     } else {

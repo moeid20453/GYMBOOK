@@ -1,4 +1,4 @@
-const User = require("../../modules/user/User.repo");
+const User = require("../../modules/User/User.repo")
 const Util = require("../../utilities");
 const bcrypt = require("bcrypt");
 const {
@@ -63,14 +63,7 @@ const login = async (req, res) => {
     res.status(500).json({ error: "Unexpected error" });
   }
 };
-let updateUser = async (req, res) => {
-  let userid = req.params.id;
-  let form = req.body;
-  let user = await User.update(userid, form);
-  res
-    .status(200)
-    .json({ message: "successfully Updated :D new data is ", user });
-};
+
 const logout = async (req, res) => {
   req.session.destroy(() => {
     res.clearCookie("token", {
@@ -82,7 +75,6 @@ const logout = async (req, res) => {
 };
 module.exports = {
   logout,
-  updateUser,
   login,
   activateUser,
   register,
