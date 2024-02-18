@@ -25,31 +25,6 @@ exports.isExist = async (filter) => {
     };
   }
 };
-exports.GetPost = async (filter) => {
-  try {
-    let post = await Post.findOne(filter);
-    if (post) {
-      return {
-        success: true,
-        post: post,
-        code: 200,
-      };
-    } else {
-      return {
-        success: false,
-        err: "post not found",
-        code: 404,
-      };
-    }
-  } catch (err) {
-    console.log("Error", err.message);
-    return {
-      success: false,
-      code: 500,
-      error: "Unexpected Error",
-    };
-  }
-};
 
 exports.ListPosts = async (filter) => {
   try {
